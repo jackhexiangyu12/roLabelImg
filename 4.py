@@ -106,7 +106,7 @@ def func(h, r):
     # 调用 rodriguesRotate 进行旋转
     # rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
     # np.save("rotated_image.npy", rotated_image)
-    np.load("rotated_image.npy")
+    rotated_image = np.load("rotated_image.npy")
     # # 可视化旋转前后的图像
     # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
     # 用plt显示三维图形
@@ -159,15 +159,10 @@ def func(h, r):
     ys = [point[1] for point in image2d_txt]
     zs = [point[2] for point in image2d_txt]
 
-    # 绘制散点图
-    ax.scatter(xs, ys, zs)
-
-    # 设置坐标轴标签
-    ax.set_xlabel('X')
-    ax.set_ylabel('Y')
-    ax.set_zlabel('Depth')
-
-    # 显示图形
+    plt.scatter(xs, ys, c=zs, cmap='viridis')
+    plt.colorbar(label='Depth')
+    plt.xlabel('X')
+    plt.ylabel('Y')
     plt.show()
 
     print()
