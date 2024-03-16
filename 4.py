@@ -64,27 +64,19 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
 
 # 假设有一个3D图像
 # 定义圆锥的高度和底面半径
-h = 5
-r = 3
+h = 30
+r = 18
 
-import numpy as np
-
+# 创建一个空的三维数组，表示图像
 N = 50
 image = np.zeros((N, N, N))
-
-# 圆锥参数
-h = 10
-r = 10
-center = (25, 0, 0)
-
-# 设置圆锥部分为1
-for z in range(N):
+M = N // 2
+length = N//2*h//r
+# 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
+for z in range(length-h, length):
     for y in range(N):
         for x in range(N):
-            # 计算当前点到圆锥中心的距离
-            distance = np.sqrt((x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2)
-            # 如果当前点在圆锥内，则设置为1
-            if distance <= r and z <= center[2] + h:
+            if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h) - N // 2) ** 2:
                 image[z, y, x] = 1
 
 # 定义旋转轴和角度
@@ -92,7 +84,7 @@ axis = [0, 1, 0]  # 旋转轴
 theta = - math.atan(r / h)  # 旋转角度
 
 # 调用 rodriguesRotate 进行旋转
-rotated_image = rodriguesRotate(image, M, M, M, axis, theta)
+rotated_image = rodriguesRotate(image, M, M, length, axis, theta)
 
 # # 可视化旋转前后的图像
 # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -111,8 +103,17 @@ plt.show()
 
 # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
-# for x in range(N):
-#     for y in range(N):
-#         for z in range(N):
-
+image2d = np.zeros((N, N))
+for x in range(N):
+    for y in range(N):
+        for z in range(N):
+            if rotated_image[z, y, x] == 1:
+                image2d[x, y] = z
+                break
+# 可视化投影结果
+plt.imshow(image2d, cmap='viridis')
+plt.show()
+# 保存结果
+np.save("image_rotated.npy", rotated_image)
+# 显示结果
 print()
