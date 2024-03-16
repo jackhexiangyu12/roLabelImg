@@ -65,7 +65,7 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
 # 假设有一个3D图像
 # 定义圆锥的高度和底面半径
 h = 50
-r = 5
+r = 30
 
 # 创建一个空的三维数组，表示图像
 N = 70
@@ -81,7 +81,7 @@ for z in range(0, h):
 
 # 定义旋转轴和角度
 axis = [0, 1, 0]  # 旋转轴
-theta =  math.atan(r / h)  # 旋转角度
+theta = math.atan(r / h)  # 旋转角度
 
 # 调用 rodriguesRotate 进行旋转
 rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
@@ -104,11 +104,11 @@ plt.show()
 # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
 image2d = np.zeros((N, N))
-for x in range(N):
+for z in range(N):
     for y in range(N):
-        for z in range(N):
+        for x in range(N):
             if rotated_image[z, y, x] == 1:
-                image2d[x, y] = z - M
+                image2d[z, y] = x - M
                 break
 # 可视化投影结果
 plt.imshow(image2d, cmap='viridis')
