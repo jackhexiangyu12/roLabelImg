@@ -62,60 +62,61 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
     return generalTransform(image, x_center, y_center, z_center, rot3d_mat, method='linear')
 
 
-# 假设有一个3D图像
-# 定义圆锥的高度和底面半径
-h = 50
-r = 20
+def func(h, r):
+    # 创建一个空的三维数组，表示图像
+    N = 70
+    image = np.zeros((N, N, N))
+    M = N // 2
+    # length = N//2*h//r
+    # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
+    for z in range(0, h):
+        for y in range(N):
+            for x in range(N):
+                if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
+                    image[z, y, x] = 1
 
-# 创建一个空的三维数组，表示图像
-N = 70
-image = np.zeros((N, N, N))
-M = N // 2
-# length = N//2*h//r
-# 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
-for z in range(0, h):
-    for y in range(N):
-        for x in range(N):
-            if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
-                image[z, y, x] = 1
+    # 定义旋转轴和角度
+    axis = [0, 1, 0]  # 旋转轴
+    theta = math.atan(r / h)  # 旋转角度
 
-# 定义旋转轴和角度
-axis = [0, 1, 0]  # 旋转轴
-theta = math.atan(r / h)  # 旋转角度
+    # 调用 rodriguesRotate 进行旋转
+    rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
 
-# 调用 rodriguesRotate 进行旋转
-rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
+    # # 可视化旋转前后的图像
+    # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+    # 用plt显示三维图形
 
-# # 可视化旋转前后的图像
-# fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
-# 用plt显示三维图形
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.voxels(image, edgecolor='k')
+    plt.title('Original Image')
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.voxels(image, edgecolor='k')
-plt.title('Original Image')
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.voxels(rotated_image, edgecolor='k')
+    plt.title('Rotated Image')
+    plt.show()
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-ax.voxels(rotated_image, edgecolor='k')
-plt.title('Rotated Image')
-plt.show()
+    # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
-# 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
+    # image2d先填充为70*70的70矩阵
+    image2d = np.full((70, 70), 70)
+    for z in range(N):
+        for y in range(N):
+            for x in range(N):
+                if rotated_image[z, y, x] == 1:
+                    image2d[z, y] = x - M
+                    break
+    # 可视化投影结果
+    plt.imshow(image2d, cmap='viridis')
+    # image2d_sqrt = np.sqrt(image2d)
+    plt.show()
+    # 保存结果
+    np.save("image_rotated.npy", rotated_image)
+    # 显示结果
+    print()
+    return image2d
 
-# image2d先填充为70*70的70矩阵
-image2d = np.full((70, 70), 70)
-for z in range(N):
-    for y in range(N):
-        for x in range(N):
-            if rotated_image[z, y, x] == 1:
-                image2d[z, y] = x - M
-                break
-# 可视化投影结果
-plt.imshow(image2d, cmap='viridis')
-# image2d_sqrt = np.sqrt(image2d)
-plt.show()
-# 保存结果
-np.save("image_rotated.npy", rotated_image)
-# 显示结果
-print()
+if __name__ == '__main__':
+    func(5, 3)
+    print()
