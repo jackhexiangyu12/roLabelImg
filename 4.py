@@ -74,7 +74,7 @@ image = np.zeros((N, N, N))
 M = 50
 N = 50
 # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
-for z in range(N-h,N):
+for z in range(N):
     for y in range(N):
         for x in range(N):
             if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h) - N // 2) ** 2:
@@ -105,8 +105,8 @@ plt.show()
 
 #将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
-for x in range(N):
-    for y in range(N):
-        for z in range(N):
+# for x in range(N):
+#     for y in range(N):
+#         for z in range(N):
 
 print()
