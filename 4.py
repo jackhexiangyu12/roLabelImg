@@ -140,11 +140,6 @@ def func(h, r):
     ax.set_xticklabels(label)
     ax.xaxis.set_major_formatter(formatter)
     ax.yaxis.set_major_formatter(formatter)
-    ax.set_xticks(np.arange(0, 10, 1))
-    ax.set_yticks(np.arange(0, 10, 1))
-    ax.set_xticklabels(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'])
-    ax.set_yticklabels(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
-    ax.tick_params(labelrotation=45, labelsize=10)
     ax.imshow(image2d, cmap='viridis', origin='lower',interpolation='bilinear')
     plt.show()
 
