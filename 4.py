@@ -65,7 +65,7 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
 # 假设有一个3D图像
 # 定义圆锥的高度和底面半径
 h = 50
-r = 30
+r = 20
 
 # 创建一个空的三维数组，表示图像
 N = 70
@@ -103,7 +103,8 @@ plt.show()
 
 # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
-image2d = np.zeros((N, N))
+# image2d先填充为70*70的70矩阵
+image2d = np.full((70, 70), 70)
 for z in range(N):
     for y in range(N):
         for x in range(N):
@@ -112,7 +113,7 @@ for z in range(N):
                 break
 # 可视化投影结果
 plt.imshow(image2d, cmap='viridis')
-image2d_sqrt = np.sqrt(image2d)
+# image2d_sqrt = np.sqrt(image2d)
 plt.show()
 # 保存结果
 np.save("image_rotated.npy", rotated_image)
