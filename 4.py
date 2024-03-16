@@ -4,6 +4,7 @@ import numpy as np
 import numpy
 import matplotlib.pyplot as plt
 from scipy.interpolate import RegularGridInterpolator
+from matplotlib.ticker import FuncFormatter
 
 fenbianlv = 1.5
 
@@ -63,10 +64,13 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
     # transform with given matrix
     return generalTransform(image, x_center, y_center, z_center, rot3d_mat, method='linear')
 
+def divide_by_thousand(x, pos):
+    'The two args are the value and tick position'
+    return '%1.1f' % (x * 1e-3)
+
 
 def func(h, r):
     # 创建一个空的三维数组，表示图像
-    N = 100
     image = np.zeros((N, N, N))
     M = N // 2
     # length = N//2*h//r
@@ -110,9 +114,15 @@ def func(h, r):
                     image2d[z, y] = x - M
                     break
     # 可视化投影结果
-    plt.imshow(image2d, cmap='viridis', origin='lower')
-    # image2d_sqrt = np.sqrt(image2d)
+    formatter = FuncFormatter(divide_by_thousand)
+    fig, ax = plt.subplots()
+    ax.imshow(image2d, cmap='viridis', origin='lower')
+    ax.xaxis.set_major_formatter(formatter)
+    ax.yaxis.set_major_formatter(formatter)
     plt.show()
+    # plt.imshow(image2d, cmap='viridis', origin='lower')
+    # # image2d_sqrt = np.sqrt(image2d)
+    # plt.show()
     # 保存结果
     # np.save("image_rotated.npy", rotated_image)
     # 显示结果
@@ -121,5 +131,6 @@ def func(h, r):
 
 
 if __name__ == '__main__':
-    func(100, 30)
+    N = 2**7+1
+    func(N, 30)
     print()
