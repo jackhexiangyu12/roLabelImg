@@ -67,15 +67,24 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
 h = 5
 r = 3
 
-# 创建一个空的三维数组，表示图像
+import numpy as np
+
 N = 50
 image = np.zeros((N, N, N))
 
-# 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
+# 圆锥参数
+h = 10
+r = 10
+center = (25, 0, 0)
+
+# 设置圆锥部分为1
 for z in range(N):
     for y in range(N):
         for x in range(N):
-            if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h) - N // 2) ** 2:
+            # 计算当前点到圆锥中心的距离
+            distance = np.sqrt((x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2)
+            # 如果当前点在圆锥内，则设置为1
+            if distance <= r and z <= center[2] + h:
                 image[z, y, x] = 1
 
 # 定义旋转轴和角度
@@ -100,8 +109,7 @@ ax.voxels(rotated_image, edgecolor='k')
 plt.title('Rotated Image')
 plt.show()
 
-
-#将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
+# 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
 # for x in range(N):
 #     for y in range(N):
