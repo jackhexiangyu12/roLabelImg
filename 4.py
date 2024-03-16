@@ -5,6 +5,8 @@ import numpy
 import matplotlib.pyplot as plt
 from scipy.interpolate import RegularGridInterpolator
 
+fenbianlv = 1.5
+
 
 # 广义的图像变换函数
 # 输入参数为三维数组img, 变换的中心x_center, y_center, z_center及3x3的变换矩阵transform_matrix
@@ -108,7 +110,7 @@ def func(h, r):
                     image2d[z, y] = x - M
                     break
     # 可视化投影结果
-    plt.imshow(image2d, cmap='viridis')
+    plt.imshow(image2d, cmap='viridis', origin='lower')
     # image2d_sqrt = np.sqrt(image2d)
     plt.show()
     # 保存结果
@@ -117,6 +119,7 @@ def func(h, r):
     print()
     return image2d
 
+
 if __name__ == '__main__':
-    func(50, 20)
+    func(70, 30)
     print()
