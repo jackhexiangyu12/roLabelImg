@@ -64,12 +64,30 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
     # transform with given matrix
     return generalTransform(image, x_center, y_center, z_center, rot3d_mat, method='linear')
 
+
 def divide_by_thousand(x, pos):
     'The two args are the value and tick position'
     return '%1.1f' % (x * 1e-3)
 
 
 def func(h, r):
+    geo = {"N": 2 ** 7 + 1, "x_Wb": -0.25e-3, "x_Eb": 0.25e-3, "y_Sb": -0.25e-3, "y_Nb": 0.25e-3}
+    # [-] number of discretization points in the x1-direction x1方向上的离散点数
+    # [m] xl-coordinate of cell at the West boundary
+    # [m] x1-coordinate of cell at the East boundary
+    # [m] x2-coordinate of cell at the South boundary
+    # [m] x2-coordinate of cell at the North boundary
+
+    geo["dx1"] = (geo["x_Eb"] - geo["y_Nb"]) / (geo["N"] - 1)
+    # [m] Spacing in x-direction
+    geo["dx2"] = (geo["y_Nb"] - geo["y_Sb"]) / (geo["N"] - 1)
+    # [m] Spacing in y-direction
+    # [m] xi-coordinates with uniform discretization
+    geo["x"] = np.linspace(geo["x_Wb"], geo["x_Eb"], geo["N"])
+    geo["y"] = np.linspace(geo["y_Sb"], geo["y_Nb"], geo["N"])
+    # [m] x2-coordinates with uniform discretization
+    x_matr, y_matr = np.meshgrid(geo["x"], geo["y"])
+
     # 创建一个空的三维数组，表示图像
     image = np.zeros((N, N, N))
     M = N // 2
@@ -86,8 +104,9 @@ def func(h, r):
     theta = math.atan(r / h)  # 旋转角度
 
     # 调用 rodriguesRotate 进行旋转
-    rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
-
+    # rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
+    # np.save("rotated_image.npy", rotated_image)
+    np.load("rotated_image.npy")
     # # 可视化旋转前后的图像
     # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
     # 用plt显示三维图形
@@ -120,17 +139,42 @@ def func(h, r):
     ax.xaxis.set_major_formatter(formatter)
     ax.yaxis.set_major_formatter(formatter)
     plt.show()
-    # plt.imshow(image2d, cmap='viridis', origin='lower')
-    # # image2d_sqrt = np.sqrt(image2d)
-    # plt.show()
-    # 保存结果
-    # np.save("image_rotated.npy", rotated_image)
-    # 显示结果
+
+    image2d_txt = []
+    for z in range(N):
+        for y in range(N):
+            for x in range(N):
+                if rotated_image[z, y, x] == 1:
+                    image2d_txt.append([geo["x"][x], geo["x"][y], x - M])
+                    break
+
+    # 按照image2d_txt输出可视化结果
+
+    # 创建一个三维图形
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    # 提取坐标和深度值
+    xs = [point[0] for point in image2d_txt]
+    ys = [point[1] for point in image2d_txt]
+    zs = [point[2] for point in image2d_txt]
+
+    # 绘制散点图
+    ax.scatter(xs, ys, zs)
+
+    # 设置坐标轴标签
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.set_zlabel('Depth')
+
+    # 显示图形
+    plt.show()
+
     print()
-    return image2d
+    return image2d_txt
 
 
 if __name__ == '__main__':
-    N = 2**7+1
+    N = 2 ** 7 + 1
     func(N, 30)
     print()
