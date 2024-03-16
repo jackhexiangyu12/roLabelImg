@@ -64,11 +64,11 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
 
 # 假设有一个3D图像
 # 定义圆锥的高度和底面半径
-h = 30
-r = 10
+h = 50
+r = 5
 
 # 创建一个空的三维数组，表示图像
-N = 50
+N = 70
 image = np.zeros((N, N, N))
 M = N // 2
 # length = N//2*h//r
@@ -106,7 +106,7 @@ plt.show()
 image2d = np.zeros((N, N))
 for x in range(N):
     for y in range(N):
-        for z in range(N-1,0,-1):
+        for z in range(N):
             if rotated_image[z, y, x] == 1:
                 image2d[x, y] = z - M
                 break
