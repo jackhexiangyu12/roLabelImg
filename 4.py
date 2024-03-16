@@ -65,7 +65,7 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
 # 假设有一个3D图像
 # 定义圆锥的高度和底面半径
 h = 30
-r = 18
+r = 10
 
 # 创建一个空的三维数组，表示图像
 N = 50
@@ -76,15 +76,15 @@ M = N // 2
 for z in range(0, h):
     for y in range(N):
         for x in range(N):
-            if (x) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
+            if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
                 image[z, y, x] = 1
 
 # 定义旋转轴和角度
 axis = [0, 1, 0]  # 旋转轴
-theta = math.atan(r / h)  # 旋转角度
+theta =  math.atan(r / h)  # 旋转角度
 
 # 调用 rodriguesRotate 进行旋转
-rotated_image = rodriguesRotate(image, 0, M, 0, axis, theta)
+rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
 
 # # 可视化旋转前后的图像
 # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -106,12 +106,13 @@ plt.show()
 image2d = np.zeros((N, N))
 for x in range(N):
     for y in range(N):
-        for z in range(N):
+        for z in range(N-1,0,-1):
             if rotated_image[z, y, x] == 1:
-                image2d[x, y] = z
+                image2d[x, y] = z - M
                 break
 # 可视化投影结果
 plt.imshow(image2d, cmap='viridis')
+image2d_sqrt = np.sqrt(image2d)
 plt.show()
 # 保存结果
 np.save("image_rotated.npy", rotated_image)
