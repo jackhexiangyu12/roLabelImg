@@ -88,10 +88,10 @@ def func(h, r):
     # [m] x2-coordinates with uniform discretization
     # x_matr, y_matr = np.meshgrid(geo["x"], geo["y"])
 
+    M = N // 2
     # 创建一个空的三维数组，表示图像
-    if skip_arg == True:
+    if skip_arg == False:
         image = np.zeros((N, N, N))
-        M = N // 2
         # length = N//2*h//r
         # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
         for z in range(0, h):
@@ -105,23 +105,22 @@ def func(h, r):
         theta = math.atan(r / h)  # 旋转角度
 
         # 调用 rodriguesRotate 进行旋转
-        # rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
-        # np.save("rotated_image.npy", rotated_image)
-    rotated_image = np.load("rotated_image.npy")
+        rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
+        np.save("rotated_image.npy", rotated_image)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.voxels(image, edgecolor='k')
+        plt.title('Original Image')
+    rotated_image = np.load("rotated_image.npy", encoding='bytes', allow_pickle=True)
     # # 可视化旋转前后的图像
     # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
     # 用plt显示三维图形
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.voxels(image, edgecolor='k')
-    plt.title('Original Image')
-
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.voxels(rotated_image, edgecolor='k')
-    plt.title('Rotated Image')
-    plt.show()
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111, projection='3d')
+    # ax.voxels(rotated_image, edgecolor='k')
+    # plt.title('Rotated Image')
+    # plt.show()
 
     # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
@@ -136,9 +135,17 @@ def func(h, r):
     # 可视化投影结果
     formatter = FuncFormatter(divide_by_thousand)
     fig, ax = plt.subplots()
-    ax.imshow(image2d, cmap='viridis', origin='lower')
+    ax = plt.gca()
+    label = [i for i in range(5)]  # 填写自己的标签
+    ax.set_xticklabels(label)
     ax.xaxis.set_major_formatter(formatter)
     ax.yaxis.set_major_formatter(formatter)
+    ax.set_xticks(np.arange(0, 10, 1))
+    ax.set_yticks(np.arange(0, 10, 1))
+    ax.set_xticklabels(['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j'])
+    ax.set_yticklabels(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'])
+    ax.tick_params(labelrotation=45, labelsize=10)
+    ax.imshow(image2d, cmap='viridis', origin='lower',interpolation='bilinear')
     plt.show()
 
     image2d_txt = []
@@ -146,21 +153,22 @@ def func(h, r):
         for y in range(N):
             for x in range(N):
                 if rotated_image[z, y, x] == 1:
-                    image2d_txt.append([geo["x"][x], geo["x"][y], x - M])
+                    image2d_txt.append([geo["x"][x], geo["x"][y], float(x - M)])
                     break
-
+    # # 保存image2d_txt
+    # np.savetxt("image2d.txt", image2d_txt)
+    # image2d_txt = np.load("image2d.txt",encoding='bytes', allow_pickle=True)
     # 按照image2d_txt输出可视化结果
 
     # 创建一个三维图形
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
 
     # 提取坐标和深度值
     xs = [point[0] for point in image2d_txt]
     ys = [point[1] for point in image2d_txt]
     zs = [point[2] for point in image2d_txt]
 
-    plt.scatter(xs, ys, c=zs, cmap='viridis')
+    plt.scatter(xs, ys, c=zs, s=1000, cmap='viridis')
     plt.colorbar(label='Depth')
     plt.xlabel('X')
     plt.ylabel('Y')
