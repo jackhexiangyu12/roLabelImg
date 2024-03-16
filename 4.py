@@ -7,7 +7,7 @@ from scipy.interpolate import RegularGridInterpolator
 from matplotlib.ticker import FuncFormatter
 
 fenbianlv = 1.5
-
+skip_arg=True
 
 # 广义的图像变换函数
 # 输入参数为三维数组img, 变换的中心x_center, y_center, z_center及3x3的变换矩阵transform_matrix
@@ -86,26 +86,27 @@ def func(h, r):
     geo["x"] = np.linspace(geo["x_Wb"], geo["x_Eb"], geo["N"])
     geo["y"] = np.linspace(geo["y_Sb"], geo["y_Nb"], geo["N"])
     # [m] x2-coordinates with uniform discretization
-    x_matr, y_matr = np.meshgrid(geo["x"], geo["y"])
+    # x_matr, y_matr = np.meshgrid(geo["x"], geo["y"])
 
     # 创建一个空的三维数组，表示图像
-    image = np.zeros((N, N, N))
-    M = N // 2
-    # length = N//2*h//r
-    # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
-    for z in range(0, h):
-        for y in range(N):
-            for x in range(N):
-                if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
-                    image[z, y, x] = 1
+    if skip_arg == True:
+        image = np.zeros((N, N, N))
+        M = N // 2
+        # length = N//2*h//r
+        # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
+        for z in range(0, h):
+            for y in range(N):
+                for x in range(N):
+                    if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
+                        image[z, y, x] = 1
 
-    # 定义旋转轴和角度
-    axis = [0, 1, 0]  # 旋转轴
-    theta = math.atan(r / h)  # 旋转角度
+        # 定义旋转轴和角度
+        axis = [0, 1, 0]  # 旋转轴
+        theta = math.atan(r / h)  # 旋转角度
 
-    # 调用 rodriguesRotate 进行旋转
-    # rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
-    # np.save("rotated_image.npy", rotated_image)
+        # 调用 rodriguesRotate 进行旋转
+        # rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
+        # np.save("rotated_image.npy", rotated_image)
     rotated_image = np.load("rotated_image.npy")
     # # 可视化旋转前后的图像
     # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
