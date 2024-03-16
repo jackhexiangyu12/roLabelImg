@@ -68,15 +68,16 @@ h = 30
 r = 10
 
 # 创建一个空的三维数组，表示图像
-N = 100
+N = 60
 image = np.zeros((N, N, N))
 
-M = int(N / 2)
+M = 50
+N = 50
 # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
-for z in range(M - h, M + h, 1):
-    for y in range(M - r, M + r, 1):
-        for x in range(M - r, M + r, 1):
-            if (x - M) ** 2 + (y - M) ** 2 <= ((z * r / h) - M) ** 2:
+for z in range(N-h,N):
+    for y in range(N):
+        for x in range(N):
+            if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h) - N // 2) ** 2:
                 image[z, y, x] = 1
 
 # 定义旋转轴和角度
@@ -100,5 +101,12 @@ ax = fig.add_subplot(111, projection='3d')
 ax.voxels(rotated_image, edgecolor='k')
 plt.title('Rotated Image')
 plt.show()
+
+
+#将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
+
+for x in range(N):
+    for y in range(N):
+        for z in range(N):
 
 print()
