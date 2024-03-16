@@ -66,7 +66,7 @@ def rodriguesRotate(image, x_center, y_center, z_center, axis, theta):
 
 def func(h, r):
     # 创建一个空的三维数组，表示图像
-    N = 70
+    N = 100
     image = np.zeros((N, N, N))
     M = N // 2
     # length = N//2*h//r
@@ -102,7 +102,7 @@ def func(h, r):
     # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
     # image2d先填充为70*70的70矩阵
-    image2d = np.full((70, 70), 0)
+    image2d = np.full((N, N), 0)
     for z in range(N):
         for y in range(N):
             for x in range(N):
@@ -114,12 +114,12 @@ def func(h, r):
     # image2d_sqrt = np.sqrt(image2d)
     plt.show()
     # 保存结果
-    np.save("image_rotated.npy", rotated_image)
+    # np.save("image_rotated.npy", rotated_image)
     # 显示结果
     print()
     return image2d
 
 
 if __name__ == '__main__':
-    func(70, 30)
+    func(100, 30)
     print()
