@@ -71,20 +71,20 @@ r = 18
 N = 50
 image = np.zeros((N, N, N))
 M = N // 2
-length = N//2*h//r
+# length = N//2*h//r
 # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
-for z in range(length-h, length):
+for z in range(0, h):
     for y in range(N):
         for x in range(N):
-            if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h) - N // 2) ** 2:
+            if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
                 image[z, y, x] = 1
 
 # 定义旋转轴和角度
 axis = [0, 1, 0]  # 旋转轴
-theta = - math.atan(r / h)  # 旋转角度
+theta =  math.atan(r / h)  # 旋转角度
 
 # 调用 rodriguesRotate 进行旋转
-rotated_image = rodriguesRotate(image, M, M, length, axis, theta)
+rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
 
 # # 可视化旋转前后的图像
 # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
