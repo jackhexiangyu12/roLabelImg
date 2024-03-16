@@ -7,7 +7,7 @@ from scipy.interpolate import RegularGridInterpolator
 from matplotlib.ticker import FuncFormatter
 
 fenbianlv = 1.5
-skip_arg=True
+skip_arg = False
 
 # 广义的图像变换函数
 # 输入参数为三维数组img, 变换的中心x_center, y_center, z_center及3x3的变换矩阵transform_matrix
@@ -107,10 +107,10 @@ def func(h, r):
         # 调用 rodriguesRotate 进行旋转
         rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
         np.save("rotated_image.npy", rotated_image)
-        fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        ax.voxels(image, edgecolor='k')
-        plt.title('Original Image')
+        # fig = plt.figure()
+        # ax = fig.add_subplot(111, projection='3d')
+        # ax.voxels(image, edgecolor='k')
+        # plt.title('Original Image')
     rotated_image = np.load("rotated_image.npy", encoding='bytes', allow_pickle=True)
     # # 可视化旋转前后的图像
     # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -163,11 +163,11 @@ def func(h, r):
     ys = [point[1] for point in image2d_txt]
     zs = [point[2] for point in image2d_txt]
 
-    plt.scatter(xs, ys, c=zs, s=1000, cmap='viridis')
-    plt.colorbar(label='Depth')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-    plt.show()
+    # plt.scatter(xs, ys, c=zs, s=10, cmap='viridis')
+    # plt.colorbar(label='Depth')
+    # plt.xlabel('X')
+    # plt.ylabel('Y')
+    # plt.show()
 
     print()
     return image2d_txt
@@ -175,5 +175,5 @@ def func(h, r):
 
 if __name__ == '__main__':
     N = 2 ** 7 + 1
-    func(N, 30)
+    func(129, 30)
     print()
