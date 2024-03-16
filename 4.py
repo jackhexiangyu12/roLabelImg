@@ -100,7 +100,7 @@ def func(h, r):
     # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
     # image2d先填充为70*70的70矩阵
-    image2d = np.full((70, 70), 70)
+    image2d = np.full((70, 70), 0)
     for z in range(N):
         for y in range(N):
             for x in range(N):
@@ -118,5 +118,5 @@ def func(h, r):
     return image2d
 
 if __name__ == '__main__':
-    func(5, 3)
+    func(50, 20)
     print()
