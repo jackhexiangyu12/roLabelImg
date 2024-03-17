@@ -96,19 +96,18 @@ def func(h, r):
         image = np.zeros((N, N, N))
         # length = N//2*h//r
         # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
-        for x in range(N):
+        for z in range(N):
             for y in range(N):
-                for z in range(N):
-                    if (x - rotated_center[0]) ** 2 + (y - rotated_center[1]) ** 2 <= (
-                            (z * r / h) - rotated_center[2]) ** 2:
-                        image[x, y, z] = 1
+                for x in range(N):
+                    if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
+                        image[z, y, x] = 1
 
         # 定义旋转轴和角度
         axis = [0, 1, 0]  # 旋转轴
         theta = - math.atan(r / h)  # 旋转角度
 
         # 调用 rodriguesRotate 进行旋转
-        rotated_image = rodriguesRotate(image, rotated_center[0], rotated_center[1], rotated_center[2], axis, theta)
+        rotated_image = rodriguesRotate(image, N // 2, N // 2, 0, axis, theta)
         np.save("rotated_image.npy", rotated_image)
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
@@ -136,11 +135,11 @@ def func(h, r):
 
     # image2d先填充为70*70的70矩阵
     image2d = np.full((N, N), 0)
-    for z in range(N):
+    for x in range(N):
         for y in range(N):
-            for x in range(N):
+            for z in range(N):
                 if rotated_image[x, y, z] == 1:
-                    image2d[z, y] = x
+                    image2d[x, y] = z-M
                     break
     # 可视化投影结果
     # formatter = FuncFormatter(divide_by_thousand)
