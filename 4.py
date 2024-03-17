@@ -190,5 +190,5 @@ def func(h, r):
 if __name__ == '__main__':
     # N = 2 ** 7 + 1
     N = 50
-    func(N, N*1/20)
+    func(N, N*1/30)
     print()
