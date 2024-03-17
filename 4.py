@@ -8,7 +8,7 @@ from matplotlib.ticker import FuncFormatter
 import time
 
 fenbianlv = 1.5
-skip_arg = False
+skip_arg = True
 
 
 # 广义的图像变换函数
@@ -188,7 +188,9 @@ def func(h, r):
 
 
 if __name__ == '__main__':
-    # N = 2 ** 7 + 1
-    N = 50
-    func(N, N*1/30)
+    N = 2 ** 7 + 1
+    # N = 50
+    h = 2 ** 7 + 1
+    r =
+    func(N, N*h/r)
     print()
