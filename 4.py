@@ -88,7 +88,7 @@ def func(h, r):
     geo["y"] = np.linspace(geo["y_Sb"], geo["y_Nb"], geo["N"])
     # [m] x2-coordinates with uniform discretization
     # x_matr, y_matr = np.meshgrid(geo["x"], geo["y"])
-    rotated_center = [N // 2, N // 2, -N // 2]
+    rotated_center = [N // 2, N // 2, N // 2]
     M = N // 2
     # 创建一个空的三维数组，表示图像
     if not skip_arg:
