@@ -106,7 +106,7 @@ def func(h, r):
     theta = math.atan(r / h)  # 旋转角度
 
     # 调用 rodriguesRotate 进行旋转
-    rotated_image = rodriguesRotate(image, 0, N // 2, 0, axis, theta)
+    rotated_image = rodriguesRotate(image, -N//2, N // 2, 0, axis, theta)
     # np.save("rotated_image.npy", rotated_image)
     if not skip_arg:
         fig = plt.figure()
@@ -118,8 +118,8 @@ def func(h, r):
         plt.title('Original Image')
         plt.savefig(time.strftime("%Y_%m_%d_%H_%M_%S_", time.localtime()) + "Original Image.png")
         plt.show()
-        # 可视化旋转前后的图像
-        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+        # # 可视化旋转前后的图像
+        # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
         # 用plt显示三维图形
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
@@ -188,6 +188,7 @@ def func(h, r):
 
 
 if __name__ == '__main__':
-    N = 2 ** 7 + 1
-    func(129, 30)
+    # N = 2 ** 7 + 1
+    N = 50
+    func(N, N*1/20)
     print()
