@@ -191,6 +191,6 @@ if __name__ == '__main__':
     N = 2 ** 7 + 1
     # N = 50
     h = 2 ** 7 + 1
-    r =
-    func(N, N*h/r)
+    r = (2 ** 7 + 1)/35
+    func(N, N*r/h)
     print()
