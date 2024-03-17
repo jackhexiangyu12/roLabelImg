@@ -98,7 +98,7 @@ def func(h, r):
     for z in range(N):
         for y in range(N):
             for x in range(N):
-                if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)+N//2) ** 2:
+                if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= (((z) * r / h)+N//2) ** 2:
                     image[z, y, x] = 1
 
     # 定义旋转轴和角度
@@ -106,7 +106,7 @@ def func(h, r):
     theta = math.atan(r / h)  # 旋转角度
 
     # 调用 rodriguesRotate 进行旋转
-    rotated_image = rodriguesRotate(image, -N//2, N // 2, 0, axis, theta)
+    rotated_image = rodriguesRotate(image, -N//2*h/r, N // 2, 0, axis, theta)
     # np.save("rotated_image.npy", rotated_image)
     if not skip_arg:
         fig = plt.figure()
@@ -191,6 +191,6 @@ if __name__ == '__main__':
     N = 2 ** 7 + 1
     # N = 50
     h = 2 ** 7 + 1
-    r = (2 ** 7 + 1)/35
+    r = (2 ** 7 + 1)/5
     func(N, N*r/h)
     print()
