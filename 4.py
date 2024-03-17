@@ -7,7 +7,7 @@ from scipy.interpolate import RegularGridInterpolator
 from matplotlib.ticker import FuncFormatter
 
 fenbianlv = 1.5
-skip_arg = False
+skip_arg = True
 
 
 # 广义的图像变换函数
@@ -91,11 +91,11 @@ def func(h, r):
     rotated_center = [N // 2, N // 2, -N // 2]
     M = N // 2
     # 创建一个空的三维数组，表示图像
-    if skip_arg == False:
+    if not skip_arg:
         image = np.zeros((N, N, N))
         # length = N//2*h//r
         # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
-        for z in range(0, h):
+        for z in range(N):
             for y in range(N):
                 for x in range(N):
                     if (x - rotated_center[0]) ** 2 + (y - rotated_center[1]) ** 2 <= (
@@ -111,7 +111,7 @@ def func(h, r):
         np.save("rotated_image.npy", rotated_image)
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
-        ax.voxels(image, edgecolor='k')
+        ax.voxels(image, edgecolor='k',origin='lower')
         plt.title('Original Image')
     rotated_image = np.load("rotated_image.npy", encoding='bytes', allow_pickle=True)
     # # 可视化旋转前后的图像
@@ -176,7 +176,7 @@ def func(h, r):
     # plt.show()
 
     print()
-    return image2d_txt
+    return image2d
 
 
 if __name__ == '__main__':
