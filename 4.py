@@ -9,6 +9,7 @@ from matplotlib.ticker import FuncFormatter
 fenbianlv = 1.5
 skip_arg = False
 
+
 # 广义的图像变换函数
 # 输入参数为三维数组img, 变换的中心x_center, y_center, z_center及3x3的变换矩阵transform_matrix
 # 须注意的是，数组的轴依序为(z,y,x)
@@ -87,7 +88,7 @@ def func(h, r):
     geo["y"] = np.linspace(geo["y_Sb"], geo["y_Nb"], geo["N"])
     # [m] x2-coordinates with uniform discretization
     # x_matr, y_matr = np.meshgrid(geo["x"], geo["y"])
-
+    rotated_center = [N // 2, N // 2, -N // 2]
     M = N // 2
     # 创建一个空的三维数组，表示图像
     if skip_arg == False:
@@ -97,7 +98,8 @@ def func(h, r):
         for z in range(0, h):
             for y in range(N):
                 for x in range(N):
-                    if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
+                    if (x - rotated_center[0]) ** 2 + (y - rotated_center[1]) ** 2 <= (
+                            (z * r / h) - rotated_center[2]) ** 2:
                         image[z, y, x] = 1
 
         # 定义旋转轴和角度
@@ -105,12 +107,12 @@ def func(h, r):
         theta = math.atan(r / h)  # 旋转角度
 
         # 调用 rodriguesRotate 进行旋转
-        rotated_image = rodriguesRotate(image, M, M, 0, axis, theta)
+        rotated_image = rodriguesRotate(image, rotated_center[2], rotated_center[1], rotated_center[0], axis, theta)
         np.save("rotated_image.npy", rotated_image)
-        # fig = plt.figure()
-        # ax = fig.add_subplot(111, projection='3d')
-        # ax.voxels(image, edgecolor='k')
-        # plt.title('Original Image')
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.voxels(image, edgecolor='k')
+        plt.title('Original Image')
     rotated_image = np.load("rotated_image.npy", encoding='bytes', allow_pickle=True)
     # # 可视化旋转前后的图像
     # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -143,7 +145,7 @@ def func(h, r):
     plt.xticks([])  # 去掉x轴
     plt.yticks([])  # 去掉y轴
     plt.axis('off')  # 去掉坐标轴
-    ax.imshow(image2d, cmap='viridis', origin='lower',interpolation='bilinear')
+    ax.imshow(image2d, cmap='viridis', origin='lower', interpolation='bilinear')
     ax.axis('off')
     plt.show()
 
@@ -160,12 +162,12 @@ def func(h, r):
     # 按照image2d_txt输出可视化结果
 
     # 创建一个三维图形
-    fig = plt.figure()
-
-    # 提取坐标和深度值
-    xs = [point[0] for point in image2d_txt]
-    ys = [point[1] for point in image2d_txt]
-    zs = [point[2] for point in image2d_txt]
+    # fig = plt.figure()
+    #
+    # # 提取坐标和深度值
+    # xs = [point[0] for point in image2d_txt]
+    # ys = [point[1] for point in image2d_txt]
+    # zs = [point[2] for point in image2d_txt]
 
     # plt.scatter(xs, ys, c=zs, s=10, cmap='viridis')
     # plt.colorbar(label='Depth')
