@@ -141,6 +141,7 @@ def func(h, r):
     ax.xaxis.set_major_formatter(formatter)
     ax.yaxis.set_major_formatter(formatter)
     ax.imshow(image2d, cmap='viridis', origin='lower',interpolation='bilinear')
+    ax.axis('off')
     plt.show()
 
     image2d_txt = []
