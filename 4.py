@@ -133,24 +133,27 @@ def func(h, r):
                     image2d[z, y] = x - M
                     break
     # 可视化投影结果
-    formatter = FuncFormatter(divide_by_thousand)
+    # formatter = FuncFormatter(divide_by_thousand)
     fig, ax = plt.subplots()
-    ax = plt.gca()
-    label = [i for i in range(5)]  # 填写自己的标签
-    ax.set_xticklabels(label)
-    ax.xaxis.set_major_formatter(formatter)
-    ax.yaxis.set_major_formatter(formatter)
+    # ax = plt.gca()
+    # label = [i for i in range(5)]  # 填写自己的标签
+    # ax.set_xticklabels(label)
+    # ax.xaxis.set_major_formatter(formatter)
+    # ax.yaxis.set_major_formatter(formatter)
+    plt.xticks([])  # 去掉x轴
+    plt.yticks([])  # 去掉y轴
+    plt.axis('off')  # 去掉坐标轴
     ax.imshow(image2d, cmap='viridis', origin='lower',interpolation='bilinear')
     ax.axis('off')
     plt.show()
 
-    image2d_txt = []
-    for z in range(N):
-        for y in range(N):
-            for x in range(N):
-                if rotated_image[z, y, x] == 1:
-                    image2d_txt.append([geo["x"][x], geo["x"][y], float(x - M)])
-                    break
+    # image2d_txt = []
+    # for z in range(N):
+    #     for y in range(N):
+    #         for x in range(N):
+    #             if rotated_image[z, y, x] == 1:
+    #                 image2d_txt.append([geo["x"][x], geo["x"][y], float(x - M)])
+    #                 break
     # # 保存image2d_txt
     # np.savetxt("image2d.txt", image2d_txt)
     # image2d_txt = np.load("image2d.txt",encoding='bytes', allow_pickle=True)
