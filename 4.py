@@ -5,9 +5,10 @@ import numpy
 import matplotlib.pyplot as plt
 from scipy.interpolate import RegularGridInterpolator
 from matplotlib.ticker import FuncFormatter
+import time
 
 fenbianlv = 1.5
-skip_arg = False
+skip_arg = True
 
 
 # 广义的图像变换函数
@@ -104,7 +105,7 @@ def func(h, r):
 
         # 定义旋转轴和角度
         axis = [0, 1, 0]  # 旋转轴
-        theta = math.atan(r / h)  # 旋转角度
+        theta = - math.atan(r / h)  # 旋转角度
 
         # 调用 rodriguesRotate 进行旋转
         rotated_image = rodriguesRotate(image, rotated_center[0], rotated_center[1], rotated_center[2], axis, theta)
@@ -116,7 +117,7 @@ def func(h, r):
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
         plt.title('Original Image')
-        plt.savefig(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "Original Image.png")
+        plt.savefig(time.strftime("%Y_%m_%d_%H_%M_%S_", time.localtime()) + "Original Image.png")
         plt.show()
         # 可视化旋转前后的图像
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
@@ -128,18 +129,18 @@ def func(h, r):
         ax.set_xlabel('X')
         ax.set_ylabel('Y')
         ax.set_zlabel('Z')
-        plt.savefig(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "Rotated Image.png")
+        plt.savefig(time.strftime("%Y_%m_%d_%H_%M_%S_", time.localtime()) + "Rotated Image.png")
         plt.show()
     rotated_image = np.load("rotated_image.npy", encoding='bytes', allow_pickle=True)
     # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
     # image2d先填充为70*70的70矩阵
     image2d = np.full((N, N), 0)
-    for x in range(N):
+    for z in range(N):
         for y in range(N):
-            for z in range(N):
+            for x in range(N):
                 if rotated_image[x, y, z] == 1:
-                    image2d[x, y] = z - M
+                    image2d[z, y] = x
                     break
     # 可视化投影结果
     # formatter = FuncFormatter(divide_by_thousand)
@@ -154,7 +155,7 @@ def func(h, r):
     plt.axis('off')  # 去掉坐标轴
     ax.imshow(image2d, cmap='viridis', origin='lower', interpolation='bilinear')
     ax.axis('off')
-    plt.savefig(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "Projection Image.png")
+    plt.savefig(time.strftime("%Y_%m_%d_%H_%M_%S_", time.localtime()) + "Projection Image.png")
     plt.show()
 
     # image2d_txt = []
