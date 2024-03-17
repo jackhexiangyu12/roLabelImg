@@ -7,7 +7,7 @@ from scipy.interpolate import RegularGridInterpolator
 from matplotlib.ticker import FuncFormatter
 
 fenbianlv = 1.5
-skip_arg = True
+skip_arg = False
 
 
 # 广义的图像变换函数
@@ -95,44 +95,51 @@ def func(h, r):
         image = np.zeros((N, N, N))
         # length = N//2*h//r
         # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
-        for z in range(N):
+        for x in range(N):
             for y in range(N):
-                for x in range(N):
+                for z in range(N):
                     if (x - rotated_center[0]) ** 2 + (y - rotated_center[1]) ** 2 <= (
                             (z * r / h) - rotated_center[2]) ** 2:
-                        image[z, y, x] = 1
+                        image[x, y, z] = 1
 
         # 定义旋转轴和角度
         axis = [0, 1, 0]  # 旋转轴
         theta = math.atan(r / h)  # 旋转角度
 
         # 调用 rodriguesRotate 进行旋转
-        rotated_image = rodriguesRotate(image, rotated_center[2], rotated_center[1], rotated_center[0], axis, theta)
+        rotated_image = rodriguesRotate(image, rotated_center[0], rotated_center[1], rotated_center[2], axis, theta)
         np.save("rotated_image.npy", rotated_image)
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
-        ax.voxels(image, edgecolor='k',origin='lower')
+        ax.voxels(image, edgecolor='k')
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
         plt.title('Original Image')
+        plt.savefig(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "Original Image.png")
+        plt.show()
+        # 可视化旋转前后的图像
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+        # 用plt显示三维图形
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.voxels(rotated_image, edgecolor='k')
+        plt.title('Rotated Image')
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
+        plt.savefig(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "Rotated Image.png")
+        plt.show()
     rotated_image = np.load("rotated_image.npy", encoding='bytes', allow_pickle=True)
-    # # 可视化旋转前后的图像
-    # fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
-    # 用plt显示三维图形
-
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111, projection='3d')
-    # ax.voxels(rotated_image, edgecolor='k')
-    # plt.title('Rotated Image')
-    # plt.show()
-
     # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
     # image2d先填充为70*70的70矩阵
     image2d = np.full((N, N), 0)
-    for z in range(N):
+    for x in range(N):
         for y in range(N):
-            for x in range(N):
-                if rotated_image[z, y, x] == 1:
-                    image2d[z, y] = x - M
+            for z in range(N):
+                if rotated_image[x, y, z] == 1:
+                    image2d[x, y] = z - M
                     break
     # 可视化投影结果
     # formatter = FuncFormatter(divide_by_thousand)
@@ -147,6 +154,7 @@ def func(h, r):
     plt.axis('off')  # 去掉坐标轴
     ax.imshow(image2d, cmap='viridis', origin='lower', interpolation='bilinear')
     ax.axis('off')
+    plt.savefig(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()) + "Projection Image.png")
     plt.show()
 
     # image2d_txt = []
