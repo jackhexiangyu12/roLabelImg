@@ -89,26 +89,26 @@ def func(h, r):
     geo["y"] = np.linspace(geo["y_Sb"], geo["y_Nb"], geo["N"])
     # [m] x2-coordinates with uniform discretization
     # x_matr, y_matr = np.meshgrid(geo["x"], geo["y"])
-    rotated_center = [N // 2, N // 2, N // 2]
+    # rotated_center = [N // 2, N // 2, N // 2]
     M = N // 2
     # 创建一个空的三维数组，表示图像
+    image = np.zeros((N, N, N))
+    # length = N//2*h//r
+    # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
+    for z in range(N):
+        for y in range(N):
+            for x in range(N):
+                if (x - N // 2) ** 2 + (y + N // 2) ** 2 <= ((z * r / h)) ** 2:
+                    image[z, y, x] = 1
+
+    # 定义旋转轴和角度
+    axis = [0, 1, 0]  # 旋转轴
+    theta = math.atan(r / h)  # 旋转角度
+
+    # 调用 rodriguesRotate 进行旋转
+    rotated_image = rodriguesRotate(image, N // 2, -N // 2, 0, axis, theta)
+    # np.save("rotated_image.npy", rotated_image)
     if not skip_arg:
-        image = np.zeros((N, N, N))
-        # length = N//2*h//r
-        # 根据圆锥的高度和底面半径，在图像数组中设置圆锥的部分为1
-        for z in range(N):
-            for y in range(N):
-                for x in range(N):
-                    if (x - N // 2) ** 2 + (y - N // 2) ** 2 <= ((z * r / h)) ** 2:
-                        image[z, y, x] = 1
-
-        # 定义旋转轴和角度
-        axis = [0, 1, 0]  # 旋转轴
-        theta = - math.atan(r / h)  # 旋转角度
-
-        # 调用 rodriguesRotate 进行旋转
-        rotated_image = rodriguesRotate(image, N // 2, N // 2, 0, axis, theta)
-        np.save("rotated_image.npy", rotated_image)
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
         ax.voxels(image, edgecolor='k')
@@ -130,7 +130,7 @@ def func(h, r):
         ax.set_zlabel('Z')
         plt.savefig(time.strftime("%Y_%m_%d_%H_%M_%S_", time.localtime()) + "Rotated Image.png")
         plt.show()
-    rotated_image = np.load("rotated_image.npy", encoding='bytes', allow_pickle=True)
+    # rotated_image = np.load("rotated_image.npy", encoding='bytes', allow_pickle=True)
     # 将rotated_image投影到xoy平面，只取最接近xoy平面的侧面，按照距离附上颜色
 
     # image2d先填充为70*70的70矩阵
