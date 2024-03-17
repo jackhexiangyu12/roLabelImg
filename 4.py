@@ -106,7 +106,7 @@ def func(h, r):
     theta = math.atan(r / h)  # 旋转角度
 
     # 调用 rodriguesRotate 进行旋转
-    rotated_image = rodriguesRotate(image, -N//2*h/r, N // 2, 0, axis, theta)
+    rotated_image = rodriguesRotate(image, -N//2, N // 2, 0, axis, theta)
     # np.save("rotated_image.npy", rotated_image)
     if not skip_arg:
         fig = plt.figure()
@@ -142,55 +142,22 @@ def func(h, r):
                     image2d[x, y] = z - M
                     break
     # 可视化投影结果
-    # formatter = FuncFormatter(divide_by_thousand)
     fig, ax = plt.subplots()
-    # ax = plt.gca()
-    # label = [i for i in range(5)]  # 填写自己的标签
-    # ax.set_xticklabels(label)
-    # ax.xaxis.set_major_formatter(formatter)
-    # ax.yaxis.set_major_formatter(formatter)
-    plt.xticks([])  # 去掉x轴
-    plt.yticks([])  # 去掉y轴
-    plt.axis('off')  # 去掉坐标轴
+    plt.xticks([])
+    plt.yticks([])
+    plt.axis('off')
     ax.imshow(image2d, cmap='viridis', origin='lower', interpolation='bilinear')
-    ax.axis('off')
     plt.savefig(time.strftime("%Y_%m_%d_%H_%M_%S_", time.localtime()) + "Projection Image.png")
     plt.show()
 
-    # image2d_txt = []
-    # for z in range(N):
-    #     for y in range(N):
-    #         for x in range(N):
-    #             if rotated_image[z, y, x] == 1:
-    #                 image2d_txt.append([geo["x"][x], geo["x"][y], float(x - M)])
-    #                 break
-    # # 保存image2d_txt
-    # np.savetxt("image2d.txt", image2d_txt)
-    # image2d_txt = np.load("image2d.txt",encoding='bytes', allow_pickle=True)
-    # 按照image2d_txt输出可视化结果
-
-    # 创建一个三维图形
-    # fig = plt.figure()
-    #
-    # # 提取坐标和深度值
-    # xs = [point[0] for point in image2d_txt]
-    # ys = [point[1] for point in image2d_txt]
-    # zs = [point[2] for point in image2d_txt]
-
-    # plt.scatter(xs, ys, c=zs, s=10, cmap='viridis')
-    # plt.colorbar(label='Depth')
-    # plt.xlabel('X')
-    # plt.ylabel('Y')
-    # plt.show()
-
-    print()
     return image2d
+
 
 
 if __name__ == '__main__':
     N = 2 ** 7 + 1
     # N = 50
     h = 2 ** 7 + 1
-    r = (2 ** 7 + 1)/5
+    r = (2 ** 7 + 1)/30
     func(N, N*r/h)
     print()
