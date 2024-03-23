@@ -74,7 +74,7 @@ def divide_by_thousand(x, pos):
 
 def func(h, r ,x_Wb, x_Eb, y_Sb, y_Nb):
     geo = {"N": 2 ** 7 + 1, "x_Wb": -0.25e-3, "x_Eb": 0.25e-3, "y_Sb": -0.25e-3, "y_Nb": 0.25e-3}
-    N = h * M/ abs(x_Wb-x_Eb)
+    N = h * M / abs(x_Wb-x_Eb)
     # [-] number of discretization points in the x1-direction x1方向上的离散点数
     # [m] xl-coordinate of cell at the West boundary
     # [m] x1-coordinate of cell at the East boundary
